@@ -1,5 +1,6 @@
 import { Query } from "./index";
 
+
 const getAllChirps = async () => Query(`
     Select 
     *  

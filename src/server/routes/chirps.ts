@@ -1,7 +1,7 @@
 import * as express from "express";
 // import chirpsMarket from "../db/chirps";
 import db from "../db";
-import users from "../db/users"
+import User from "../db/users"
 
 const router = express.Router();
 
@@ -23,7 +23,7 @@ router.get("/:id", async (req: express.Request, res: express.Response) => {
 router.post("/", async (req, res) => {
   try {
     const name = req.body.name;
-    let newUser = await users.User(name);
+    let newUser = await User.User(name);
     console.log(newUser);
     res.json(await db.Chirps.CreateChirp(req.body.userid, req.body.content)[0]);
   } catch (error) {

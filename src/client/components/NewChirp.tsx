@@ -1,35 +1,38 @@
-import React from 'react';
-import { RouteComponentProps, useHistory} from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { RouteComponentProps, useHistory } from "react-router-dom";
 
-const NewChirp: React.FC<IChirpProps> = (props:IChirpProps) => {
-    const [chirp, setChirp] = React.useState({
-        user: "",
-        content: ""
+const NewChirp: React.FC<IChirpProps> = (props) => {
+  const [name, setName] = useState<string>("");
+  const [content, setContent] = useState<string>("");
+
+
+  const handleClick = (e) => {
+    e.preventDefault();
+    newChirp();
+  };
+
+  const history = useHistory();
+
+  const newChirp = async () => {
+    const chirp = {
+      name: name,
+      content: content,
+    };
+    let res = await fetch("/api/chirps", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(chirp),
     });
-
-    const onUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => setChirp({
-        user: e.target.value,
-        content: chirp.content
-    });
-
-    const onMessageChange = (e: React.ChangeEvent<HTMLInputElement>) => setChirp({
-        user: chirp.user,
-        content: e.target.value
-    });
-
-    const history = useHistory();
-
-    const saveChirp = async () => {
-        await fetch("/api/chirps", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(chirp)
-        });
-
-        props.history.push("/");
+    if (res.ok) {
+      console.log("chirp posted");
+      history.push("/");
+    } else {
+      console.log("chirp not posted");
     }
+  };
 
   return (
     <form className=" d-flex justify-content-center align-items-center">
@@ -40,8 +43,8 @@ const NewChirp: React.FC<IChirpProps> = (props:IChirpProps) => {
           className="form-control"
           id="username-form"
           placeholder="Enter Username"
-          defaultValue={chirp.user}
-          onChange={onUsernameChange}
+          value={name}
+          onChange={(e) => setName(e.target.value)}
         />
         <div className="form-group">
           <label className="font-weight-bolder">Chirp</label>
@@ -50,14 +53,14 @@ const NewChirp: React.FC<IChirpProps> = (props:IChirpProps) => {
             className="form-control"
             id="message-form"
             placeholder="Enter Chirp Here"
-            defaultValue={chirp.content}
-            onChange={onMessageChange}
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
           ></input>
         </div>
         <button
           type="submit"
           className="btn btn-outline-danger w-20 mx-auto shadow-sm mb-2"
-          onClick={saveChirp}
+          onClick={(e) => handleClick(e)}
         >
           Send Chirp!
         </button>
@@ -68,9 +71,9 @@ const NewChirp: React.FC<IChirpProps> = (props:IChirpProps) => {
 
 export interface IChirpProps extends RouteComponentProps<{}> {
   id?: number;
- name: string;
-  content: string,
-  userid: string
+  name: string;
+  content: string;
+  userid: string;
 }
 
 export default NewChirp;

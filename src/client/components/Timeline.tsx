@@ -5,6 +5,12 @@ import uuid from "react-uuid"
 const Timeline: React.FC<ChirpProps> = () => {
   const [chirps, setChirps] = React.useState<ChirpProps[]>([]);
 
+
+
+ React.useEffect(() => {
+    getChirps();
+  }, []);
+
   const getChirps = async () => {
     console.log("fetching chirps")
     try {
@@ -17,15 +23,12 @@ const Timeline: React.FC<ChirpProps> = () => {
     }
   };
 
-  React.useEffect(() => {
-    getChirps();
-  }, []);
-
+ 
   return (
     <section className="row" id="row1">
       {chirps.map((chirp: ChirpProps) => (
         <div
-          key={uuid()}
+          key={chirp.id}
           className="card d-flex justify-content-center align-items-center shadow-lg text-center m-4 rounded text-danger bg-white "
           style={{ width: "20rem" }}
         >

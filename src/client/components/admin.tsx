@@ -19,27 +19,15 @@ const Admin: React.FC<IAdminProps> = (props: IAdminProps) => {
   const handleTextChange = (e) => setContent(e.target.value);
 
   const editChirp = async (id: string) => {
-    const chirp = {
-      id: id,
-      name: name,
-      content: content,
-    };
-
-    let res = await fetch(`/api/chirps/${id}`, {
+    await fetch(`/api/chirps/${id}`, {
       method: "PUT",
       headers: {
-        Accept: "application/json",
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(chirp),
+      body: JSON.stringify({ content: content }),
     });
 
-    if (res.ok) {
-      props.history.push("/");
-      console.log("chirp edited");
-    } else {
-      console.log("chirp edit failed");
-    }
+    props.history.push("/");
   };
 
   const deleteChirp = async (id: string) => {
@@ -52,7 +40,6 @@ const Admin: React.FC<IAdminProps> = (props: IAdminProps) => {
   return (
     <section className="row" id="row1">
       <div
-        // key={chirps.id}
         className="card d-flex align-items-center shadow-lg text-center m-4 rounded text-danger bg-white "
         style={{ width: "20rem" }}
       >
@@ -92,7 +79,7 @@ const Admin: React.FC<IAdminProps> = (props: IAdminProps) => {
   );
 };
 
-export interface IAdminProps extends RouteComponentProps<{ id: string}> {
+export interface IAdminProps extends RouteComponentProps<{ id: string }> {
   //  chirp = {
   //    id:string,
   //    name: string,

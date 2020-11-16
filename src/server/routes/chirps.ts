@@ -1,51 +1,74 @@
 import * as express from "express";
-// import chirpsMarket from "../db/chirps";
 import db from "../db";
-import User from "../db/users"
 
 const router = express.Router();
 
 router.get("/", async (req: express.Request, res: express.Response) => {
-  let data = await db.Chirps.GetChirps();
-  res.json(data);
+  try {
+    const data = await db.Chirps.GetChirps();
+    res.json(data);
+  } catch (err) {
+    console.log(err);
+    res.status(500).send(err);
+  }
 });
 
 router.get("/:id", async (req: express.Request, res: express.Response) => {
-  const data = await db.Chirps.GetChirp(req.params.id);
-
-  res.json(data[0]);
-});
-
-// router.post("/", async (req: express.Request, res: express.Response) => {
-//   chirpsMarket.CreateChirp(req.body.userid, req.body.content);
-//   res.sendStatus(200);
-// });
-router.post("/", async (req, res) => {
   try {
-    const name = req.body.name;
-    let newUser = await User.User(name);
-    console.log(newUser);
-    res.json(await db.Chirps.CreateChirp(req.body.userid, req.body.content)[0]);
+    const id: number = Number(req.params.id);
+    const data = await db.Chirps.GetChirp(id);
+    res.send(data[0]);
   } catch (error) {
     console.log(error);
-    res.sendStatus(500);
+    res.status(500).send(error);
+  }
+});
+
+router.post("/", async (req: express.Request, res: express.Response) => {
+  try {
+    const newUserName = req.body.name;
+    const newChirpContent = req.body.content;
+
+    const newUser = await db.Users.User(newUserName);
+    const newUserId = newUser.insertId;
+
+    const newChirp = await db.Chirps.CreateChirp(newUserId, newChirpContent);
+    res.status(200).send(`
+      user created with id: ${newUserId}
+      chirp created with id: ${newChirp.insertId}
+      `);
+  } catch (err) {
+    console.log(err);
+    res.status(500).send(err);
   }
 });
 
 router.put("/:id", async (req: express.Request, res: express.Response) => {
   try {
-    res.json(await db.Chirps.UpdateChirp(req.body.content, req.body.id));
-  } catch (error) {
-    console.log(error)
-  }
+    const id: number = Number(req.params.id);
+    const newChirpContent = req.body.content;
 
-  res.sendStatus(200);
+    await db.Chirps.UpdateChirp(newChirpContent, id);
+
+    res.status(200).send(`Updated chirp ${id}`);
+  } catch (err) {
+    console.log(err);
+    res.status(500).send(err);
+  }
 });
 
 router.delete("/:id", async (req: express.Request, res: express.Response) => {
-  db.Chirps.DeleteChirp(parseInt(req.params.id));
+  try {
+    const id: number = Number(req.params.id);
 
-  res.sendStatus(200);
+    await db.Mentions.destroy(id);
+    await db.Chirps.DeleteChirp(id);
+
+    res.send(`chirp ${id} was deleted`);
+  } catch (err) {
+    console.log(err);
+    res.status(500).send(err);
+  }
 });
 
 interface chirp {

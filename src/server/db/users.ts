@@ -8,7 +8,7 @@ interface IUsers {
     _created?: Date
 }
 
-const User = (name: string) => Query(`
+const User = async (name: string) => Query(`
 INSERT INTO USERS (name)
 VALUES (?)
 `, [name]);

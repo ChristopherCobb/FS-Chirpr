@@ -1,17 +1,17 @@
 import * as express from "express";
-import chirpsMarket from "../db/chirps";
+// import chirpsMarket from "../db/chirps";
 import db from "../db";
 import users from "../db/users"
 
 const router = express.Router();
 
 router.get("/", async (req: express.Request, res: express.Response) => {
-  let data = await chirpsMarket.GetChirps();
+  let data = await db.Chirps.GetChirps();
   res.json(data);
 });
 
 router.get("/:id", async (req: express.Request, res: express.Response) => {
-  const data = await chirpsMarket.GetChirp(req.params.id);
+  const data = await db.Chirps.GetChirp(req.params.id);
 
   res.json(data[0]);
 });
@@ -25,7 +25,7 @@ router.post("/", async (req, res) => {
     const name = req.body.name;
     let newUser = await users.User(name);
     console.log(newUser);
-    res.json(await chirpsMarket.CreateChirp(req.body.userid, req.body.content)[0]);
+    res.json(await db.Chirps.CreateChirp(req.body.userid, req.body.content)[0]);
   } catch (error) {
     console.log(error);
     res.sendStatus(500);
@@ -34,7 +34,7 @@ router.post("/", async (req, res) => {
 
 router.put("/:id", async (req: express.Request, res: express.Response) => {
   try {
-    res.json(await chirpsMarket.UpdateChirp(req.body.content, req.body.id));
+    res.json(await db.Chirps.UpdateChirp(req.body.content, req.body.id));
   } catch (error) {
     console.log(error)
   }
@@ -43,7 +43,7 @@ router.put("/:id", async (req: express.Request, res: express.Response) => {
 });
 
 router.delete("/:id", async (req: express.Request, res: express.Response) => {
-  chirpsMarket.DeleteChirp(parseInt(req.params.id));
+  db.Chirps.DeleteChirp(parseInt(req.params.id));
 
   res.sendStatus(200);
 });

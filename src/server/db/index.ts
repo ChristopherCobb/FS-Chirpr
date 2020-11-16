@@ -1,4 +1,5 @@
 import * as mysql from 'mysql'
+import Chirps from "./chirps"
 
 
 
@@ -20,6 +21,7 @@ export const Query = (query: string, values?: Array<string | number >) => {
 }
 
 export default {
-    Query
+    Query,
+    Chirps
 
 }

@@ -26,8 +26,8 @@ router.post("/", async (req, res) => {
     let newUser = await users.User(name);
     console.log(newUser);
     res.json(await chirpsMarket.CreateChirp(req.body.userid, req.body.content)[0]);
-  } catch (e) {
-    console.log(e);
+  } catch (error) {
+    console.log(error);
     res.sendStatus(500);
   }
 });

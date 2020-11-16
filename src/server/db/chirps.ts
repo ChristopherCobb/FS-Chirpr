@@ -17,7 +17,8 @@ const getOneChirp = async (id:string) =>
 
 const postChirp = async (userid: string, content: string) =>
   Query(`
-  insert into chirps(userid, content) values (?,?)`, [userid, content]);
+  INSERT INTO Chirps(userid, content) 
+  VALUES (?,?)`, [userid, content]);
 
 const updateChirp = async (content:string, id:number) =>
   Query(`
@@ -25,7 +26,7 @@ const updateChirp = async (content:string, id:number) =>
   SET content = ? 
   WHERE id = ?`, [content, id]);
 
-const deleteChirp = async (id: string) => Query("DELETE FROM Chirps WHERE id =?", [id]);
+const deleteChirp = async (id: number) => Query("DELETE FROM Chirps WHERE id =?", [id]);
 
 export default {
   GetChirps: getAllChirps,

@@ -1,21 +1,18 @@
-// import * as express from 'express';
-// import db from "../db";
-// const router = express.Router();
+import { Query } from './index';
 
-// router.get("/:name", async (req, res, next) => {
-//     try {
-//         const name = req.params.name,
-//             dbResponse = await db.mentions.one(name);
+interface IUsers {
+    id?: number,
+    name?: string,
+    email?: string,
+    password?: string,
+    _created?: Date
+}
 
-//         res.send(dbResponse);
-//     } catch (error) {
-//         next(error)
-//     }
-// });
+const User = (name: string) => Query(`
+INSERT INTO USERS (name)
+VALUES (?)
+`, [name]);
 
-// router.post("/", async (req, res, next) => {
-//     try {
-//         const userid = parseInt(req.body.userid),
-//             chirpId = req.body.chirpid;
-    
-// export default router;
+export default {
+    User
+};

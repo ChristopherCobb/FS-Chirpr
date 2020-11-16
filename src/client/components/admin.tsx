@@ -1,6 +1,7 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
 import { RouteComponentProps, Link } from "react-router-dom";
+import chirps from "../../server/db/chirps";
 
 const Admin: React.FC<IAdminProps> = (props: IAdminProps) => {
   const [name, setName] = useState<string>("");
@@ -15,7 +16,6 @@ const Admin: React.FC<IAdminProps> = (props: IAdminProps) => {
     })();
   }, []);
 
-
   const handleTextChange = (e) => setContent(e.target.value);
 
   const editChirp = async (id: string) => {
@@ -27,7 +27,6 @@ const Admin: React.FC<IAdminProps> = (props: IAdminProps) => {
 
     let res = await fetch(`/api/chirps/${id}`, {
       method: "PUT",
-
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
@@ -53,16 +52,10 @@ const Admin: React.FC<IAdminProps> = (props: IAdminProps) => {
   return (
     <section className="row" id="row1">
       <div
-        key="admin-${id}"
+        // key={chirps.id}
         className="card d-flex align-items-center shadow-lg text-center m-4 rounded text-danger bg-white "
         style={{ width: "20rem" }}
       >
-        <img
-          className="card-img-top"
-          src="./public/assets/download"
-          alt="Birdie Image"
-          style={{ height: "100px", width: "100px" }}
-        />
         <div className="card-body ">
           <h5 className="card-title bg-light">@{name} </h5>
           <textarea
@@ -99,7 +92,7 @@ const Admin: React.FC<IAdminProps> = (props: IAdminProps) => {
   );
 };
 
-export interface IAdminProps extends RouteComponentProps<{ id: string }> {
+export interface IAdminProps extends RouteComponentProps<{ id: string}> {
   //  chirp = {
   //    id:string,
   //    name: string,

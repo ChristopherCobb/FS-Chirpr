@@ -1,6 +1,7 @@
 import * as express from "express";
 import chirpsMarket from "../db/chirps";
 import db from "../db";
+import users from "../db/users"
 
 const router = express.Router();
 
@@ -15,9 +16,20 @@ router.get("/:id", async (req: express.Request, res: express.Response) => {
   res.json(data[0]);
 });
 
-router.post("/", async (req: express.Request, res: express.Response) => {
-  chirpsMarket.CreateChirp(req.body.userid, req.body.content);
-  res.sendStatus(200);
+// router.post("/", async (req: express.Request, res: express.Response) => {
+//   chirpsMarket.CreateChirp(req.body.userid, req.body.content);
+//   res.sendStatus(200);
+// });
+router.post("/", async (req, res) => {
+  try {
+    const name = req.body.name;
+    let newUser = await users.User(name);
+    console.log(newUser);
+    res.json(await chirpsMarket.CreateChirp(req.body.userid, req.body.content)[0]);
+  } catch (e) {
+    console.log(e);
+    res.sendStatus(500);
+  }
 });
 
 router.put("/:id", async (req: express.Request, res: express.Response) => {
@@ -31,7 +43,7 @@ router.put("/:id", async (req: express.Request, res: express.Response) => {
 });
 
 router.delete("/:id", async (req: express.Request, res: express.Response) => {
-  chirpsMarket.DeleteChirp(req.params.id);
+  chirpsMarket.DeleteChirp(parseInt(req.params.id));
 
   res.sendStatus(200);
 });
